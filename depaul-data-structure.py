@@ -36,3 +36,4 @@ print(f"Unique Reference_ID count: {df['Reference_ID'].nunique()} \n")
 
 print(f"Duplicate Reference_ID count: {df['Reference_ID'].duplicated()} \n")
 
+print(f"Unique Application: {df['Reference_ID', 'First_Name', 'Last_Name'].is_unique} \n")
