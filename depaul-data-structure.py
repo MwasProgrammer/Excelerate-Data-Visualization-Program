@@ -36,4 +36,23 @@ print(f"Unique Reference_ID count: {df['Reference_ID'].nunique()} \n")
 
 print(f"Duplicate Reference_ID count: {df['Reference_ID'].duplicated()} \n")
 
-print(f"Unique Application: {df['Reference_ID', 'First_Name', 'Last_Name'].is_unique} \n")
+student_applicants = ['Reference_ID', 'First_Name', 'Last_Name', 'Email', 'Phone_Number']
+
+# unique_applicants = df.drop_duplicates(subset=['Reference_ID'])[student_applicants]
+
+# print(f"Unique student applicants:\n{unique_applicants}\n")
+
+# 1. Get the absolute count of unique applications based on the Reference_ID primary key
+unique_count = df['Reference_ID'].nunique()
+print(f"Number of Unique Applications: {unique_count}\n")
+
+# 2. Extract a clean list of unique applicants by removing the duplicates
+# (Adjust 'Given_Name' to 'First_Name' if your dataset schema changed)
+name_columns = ['Reference_ID', 'Given_Name', 'Last_Name'] 
+
+# Drop duplicates based on Reference_ID, then isolate the name columns
+unique_applicants = df.drop_duplicates(subset=['Reference_ID'])[name_columns]
+
+# 3. Display the total list of names (showing the first 20 as a preview)
+print("List of Unique Applicants:")
+print(unique_applicants.to_string(max_rows=20))
