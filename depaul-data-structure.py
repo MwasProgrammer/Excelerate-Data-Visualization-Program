@@ -7,6 +7,28 @@ import numpy as np
 
 df = pd.read_csv("DePaul_Data+-+DePaul_Data.csv")
 
+def check_internal_duplicates(cell_value):
+    if pd.isna(cell_value):
+        return False
+    
+    # Split by comma (change to ' ' or ';' if your data uses a different separator)
+    tokens = [token.strip() for token in str(cell_value).split(',')]
+    
+    # If there are multiple words, check if compressing them into a set reduces the count
+    if len(tokens) > 1:
+        return len(set(tokens)) < len(tokens)
+    return False
+
+# 2. Create a boolean mask and apply it to the College column
+internal_dup_mask = df['College'].apply(check_internal_duplicates)
+df_college_anomalies = df[internal_dup_mask]
+
+# 3. Output the diagnostic results
+print(f"Found {len(df_college_anomalies)} rows with internally duplicated inputs in 'College'.\n")
+print("Preview of affected records:")
+print(df_college_anomalies[['Reference_ID', 'College']].head(10))
+
+
 print(f"Total rows: {df.shape[0]}") 
 print(f"Total columns: {df.shape[1]}\n")
 
