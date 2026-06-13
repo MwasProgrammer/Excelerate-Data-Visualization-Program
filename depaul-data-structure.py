@@ -7,26 +7,7 @@ import numpy as np
 
 df = pd.read_csv("DePaul_Data+-+DePaul_Data.csv")
 
-def check_internal_duplicates(cell_value):
-    if pd.isna(cell_value):
-        return False
-    
-    # Split by comma (change to ' ' or ';' if your data uses a different separator)
-    tokens = [token.strip() for token in str(cell_value).split(',')]
-    
-    # If there are multiple words, check if compressing them into a set reduces the count
-    if len(tokens) > 1:
-        return len(set(tokens)) < len(tokens)
-    return False
 
-# 2. Create a boolean mask and apply it to the College column
-internal_dup_mask = df['College'].apply(check_internal_duplicates)
-df_college_anomalies = df[internal_dup_mask]
-
-# 3. Output the diagnostic results
-print(f"Found {len(df_college_anomalies)} rows with internally duplicated inputs in 'College'.\n")
-print("Preview of affected records:")
-print(df_college_anomalies[['Reference_ID', 'College']].head(10))
 
 
 print(f"Total rows: {df.shape[0]}") 
@@ -73,8 +54,38 @@ print(f"Number of Unique Applications: {unique_count}\n")
 name_columns = ['Reference_ID', 'Given_Name', 'Last_Name'] 
 
 # Drop duplicates based on Reference_ID, then isolate the name columns
-unique_applicants = df.drop_duplicates(subset=['Reference_ID'])[name_columns]
+unique_applicants = df.drop_duplicates(subset=['Reference_ID'])[name_columns].sum()
 
 # 3. Display the total list of names (showing the first 20 as a preview)
-print("List of Unique Applicants:")
-print(unique_applicants.to_string(max_rows=20))
+# print("List of Unique Applicants:")
+# print(unique_applicants.to_string(max_rows=20))
+
+def check_internal_duplicates(cell_value):
+    if pd.isna(cell_value):
+        return False
+    
+    # Split by comma (change to ' ' or ';' if your data uses a different separator)
+    tokens = [token.strip() for token in str(cell_value).split(',')]
+    
+    # If there are multiple words, check if compressing them into a set reduces the count
+    if len(tokens) > 1:
+        return len(set(tokens)) < len(tokens)
+    return False
+
+# 2. Create a boolean mask and apply it to the College column
+internal_dup_mask = df['College'].apply(check_internal_duplicates)
+df_college_anomalies = df[internal_dup_mask]
+
+# 3. Output the diagnostic results
+print(f"Found {len(df_college_anomalies)} rows with internally duplicated inputs in 'College'.\n")
+print("Preview of affected records:")
+print(df_college_anomalies[['Reference_ID', 'College']].head(10))
+
+# Count the total number of perfectly identical rows
+total_exact_dupes = df.duplicated().sum()
+print(f"Total Exact Row Duplicates: {total_exact_dupes}")
+
+# Isolate them to see what they look like
+if total_exact_dupes > 0:
+    exact_dupes_df = df[df.duplicated(keep=False)] # keep=False shows all copies
+    print(exact_dupes_df[['Reference_ID', 'Last_Name', 'Term']].head(5))
