@@ -26,6 +26,8 @@ schema_data_type_report = pd.DataFrame ({
     'Valid Entries': df.count(),
     'Data Type': df.dtypes,
     'Missing Entries (Null)': df.isnull().sum(),
+    
+    'duplicate Entries': df.duplicated().sum()
 
 })
 
