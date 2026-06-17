@@ -58,9 +58,6 @@ name_columns = ['Reference_ID', 'Given_Name', 'Last_Name']
 # Drop duplicates based on Reference_ID, then isolate the name columns
 unique_applicants = df.drop_duplicates(subset=['Reference_ID'])[name_columns].sum()
 
-# 3. Display the total list of names (showing the first 20 as a preview)
-# print("List of Unique Applicants:")
-# print(unique_applicants.to_string(max_rows=20))
 
 def check_internal_duplicates(cell_value):
     if pd.isna(cell_value):
