@@ -43,9 +43,6 @@ print(f"Duplicate Reference_ID count: {df['Reference_ID'].duplicated()} \n")
 
 student_applicants = ['Reference_ID', 'First_Name', 'Last_Name', 'Email', 'Phone_Number']
 
-# unique_applicants = df.drop_duplicates(subset=['Reference_ID'])[student_applicants]
-
-# print(f"Unique student applicants:\n{unique_applicants}\n")
 
 # 1. Get the absolute count of unique applications based on the Reference_ID primary key
 unique_count = df['Reference_ID'].nunique()
